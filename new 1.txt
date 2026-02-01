@@ -1,140 +1,183 @@
-
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>POLARIS | אופנת חורף פרימיום</title>
+    <title>POLARIS | Premium Winter Wear</title>
     <style>
         :root {
-            --primary-blue: #1a2a3a;
-            --accent-gold: #c5a059;
-            --ice-white: #f0f4f8;
-            --text-dark: #2c3e50;
-            --danger: #e74c3c;
+            --primary: #1a2a3a;
+            --accent: #c5a059;
+            --bg: #f0f4f8;
+            --white: #ffffff;
+            --text: #2c3e50;
         }
 
-        body { font-family: 'Segoe UI', system-ui, sans-serif; margin: 0; background-color: var(--ice-white); color: var(--text-dark); scroll-behavior: smooth; }
+        body { 
+            font-family: 'Assistant', 'Segoe UI', Tahoma, sans-serif; 
+            margin: 0; 
+            background-color: var(--bg); 
+            color: var(--text);
+            line-height: 1.6;
+        }
 
-        /* סרגל ניווט */
-        header { background: var(--primary-blue); color: white; padding: 1.5rem; text-align: center; }
-        .logo-area h1 { margin: 0; font-size: 2.5rem; letter-spacing: 4px; }
-        nav { display: flex; justify-content: center; gap: 30px; background: white; padding: 15px; border-bottom: 1px solid #ddd; position: sticky; top: 0; z-index: 1000; }
-        nav a { color: var(--primary-blue); text-decoration: none; font-weight: bold; }
+        /* Navigation */
+        nav { 
+            display: flex; 
+            justify-content: space-around; 
+            align-items: center; 
+            background: var(--white); 
+            padding: 15px 5%; 
+            position: sticky; 
+            top: 0; 
+            z-index: 1000; 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .logo { font-size: 1.8rem; font-weight: bold; letter-spacing: 3px; color: var(--primary); }
+        .nav-links a { text-decoration: none; color: var(--primary); margin: 0 15px; font-weight: 600; }
 
-        /* כפתור עגלה */
-        .cart-toggle { position: fixed; top: 20px; left: 20px; background: var(--accent-gold); color: white; padding: 12px 20px; border-radius: 50px; cursor: pointer; z-index: 2000; border: none; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+        /* Cart Button */
+        .cart-btn {
+            background: var(--accent);
+            color: var(--white);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+        .cart-btn:hover { opacity: 0.9; transform: scale(1.05); }
 
-        /* גריד מוצרים */
-        .container { max-width: 1200px; margin: 40px auto; padding: 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; }
-        .card { background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.05); text-align: center; cursor: pointer; transition: 0.3s; }
-        .card:hover { transform: translateY(-5px); }
-        .card img { width: 100%; height: 350px; object-fit: cover; }
-        .product-info { padding: 15px; }
+        /* Products Grid */
+        .container { 
+            max-width: 1200px; 
+            margin: 40px auto; 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
+            gap: 30px; 
+            padding: 0 20px;
+        }
+        .product-card { 
+            background: var(--white); 
+            border-radius: 12px; 
+            overflow: hidden; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05); 
+            transition: 0.3s;
+            cursor: pointer;
+        }
+        .product-card:hover { transform: translateY(-10px); }
+        .product-card img { width: 100%; height: 350px; object-fit: cover; }
+        .product-info { padding: 20px; text-align: center; }
 
-        /* מודאל דף מוצר */
-        .product-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: none; align-items: center; justify-content: center; z-index: 4000; }
-        .product-modal.active { display: flex; }
-        .modal-content { background: white; width: 90%; max-width: 900px; max-height: 90vh; display: flex; border-radius: 12px; overflow: hidden; position: relative; }
-        .modal-close { position: absolute; top: 15px; right: 15px; font-size: 2rem; cursor: pointer; z-index: 10; }
-        .modal-img { width: 50%; }
-        .modal-img img { width: 100%; height: 100%; object-fit: cover; }
-        .modal-details { width: 50%; padding: 30px; text-align: right; overflow-y: auto; }
-
-        /* דירוג כוכבים */
-        .rating { color: #f1c40f; margin: 10px 0; font-size: 1.1rem; }
+        /* Modal Structure */
+        .modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7); display: none; 
+            justify-content: center; align-items: center; z-index: 2000;
+        }
+        .modal.active { display: flex; }
+        .modal-box { 
+            background: var(--white); width: 90%; max-width: 850px; 
+            border-radius: 15px; display: flex; position: relative; overflow: hidden;
+            animation: fadeIn 0.3s ease;
+        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         
-        /* בחירת מידה וצבע */
-        .selector-label { font-weight: bold; margin: 15px 0 5px; display: block; }
-        .size-btn { border: 1px solid #ddd; padding: 8px 12px; margin-left: 5px; cursor: pointer; background: white; }
-        .size-btn.selected { background: var(--primary-blue); color: white; }
-        .color-dot { display: inline-block; width: 22px; height: 22px; border-radius: 50%; margin-left: 8px; cursor: pointer; border: 2px solid transparent; outline: 1px solid #ddd; }
-        .color-dot.selected { border-color: var(--primary-blue); transform: scale(1.2); }
+        .modal-close { position: absolute; top: 15px; right: 20px; font-size: 2rem; cursor: pointer; color: var(--primary); }
+        .modal-left { width: 50%; }
+        .modal-left img { width: 100%; height: 100%; object-fit: cover; }
+        .modal-right { width: 50%; padding: 40px; }
 
-        .btn-add { background: var(--primary-blue); color: white; width: 100%; padding: 15px; border: none; border-radius: 5px; cursor: pointer; font-size: 1.1rem; margin-top: 20px; }
+        .btn-main {
+            background: var(--primary); color: var(--white); border: none;
+            padding: 15px; width: 100%; border-radius: 8px; cursor: pointer;
+            font-size: 1.1rem; margin-top: 20px; transition: 0.3s;
+        }
+        .btn-main:hover { background: var(--accent); }
 
-        /* צור קשר */
-        .contact { background: white; padding: 60px 20px; text-align: center; }
-        .contact form { max-width: 500px; margin: 0 auto; text-align: right; }
-        .contact input, .contact textarea { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 5px; }
+        /* Review Stars */
+        .stars { color: #f1c40f; margin-bottom: 10px; }
 
-        @media (max-width: 768px) { .modal-content { flex-direction: column; } .modal-img, .modal-details { width: 100%; } }
+        @media (max-width: 768px) {
+            .modal-box { flex-direction: column; height: 90vh; overflow-y: auto; }
+            .modal-left, .modal-right { width: 100%; }
+            .modal-left { height: 300px; }
+        }
     </style>
 </head>
 <body>
 
-<button class="cart-toggle">🛒 עגלה (<span id="cart-count">0</span>)</button>
-
-<header>
-    <h1>POLARIS</h1>
-    <p>NORTHERN ELEGANCE</p>
-</header>
-
 <nav>
-    <a href="#">קולקציה</a>
-    <a href="#products">חנות</a>
-    <a href="#contact">צור קשר</a>
+    <div class="logo">POLARIS</div>
+    <div class="nav-links">
+        <a href="#">חנות</a>
+        <a href="#contact">צור קשר</a>
+    </div>
+    <button class="cart-btn" onclick="alert('העגלה ריקה כרגע')">🛒 (<span id="count">0</span>)</button>
 </nav>
 
-<div class="container" id="products">
-    <div class="card" onclick="openProduct('מעיל צמר ארקטיק', 890, 'https://images.unsplash.com/photo-1544022613-e87ca75a784a?q=80&w=600', 'מעיל צמר פרימיום דוחה רוח.')">
-        <img src="https://images.unsplash.com/photo-1544022613-e87ca75a784a?q=80&w=400">
-        <div class="product-info"><h3>מעיל צמר ארקטיק</h3><p>₪890</p></div>
+<div class="container">
+    <div class="product-card" onclick="showProduct('מעיל צמר נורדי', 950, 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=600', 'מעיל צמר איכותי בעבודת יד, מתאים לטמפרטורות של עד -10 מעלות.')">
+        <img src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=400" alt="מעיל צמר">
+        <div class="product-info">
+            <h3>מעיל צמר נורדי</h3>
+            <p>₪950</p>
+        </div>
     </div>
-    <div class="card" onclick="openProduct('סוודר קשמיר', 349, 'https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?q=80&w=600', 'סריג קשמיר רך ומפנק.')">
-        <img src="https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?q=80&w=400">
-        <div class="product-info"><h3>סוודר קשמיר</h3><p>₪349</p></div>
-    </div>
-</div>
 
-<div class="product-modal" id="productModal">
-    <div class="modal-content">
-        <span class="modal-close" onclick="closeProduct()">&times;</span>
-        <div class="modal-img"><img id="modalImg" src=""></div>
-        <div class="modal-details">
-            <h2 id="modalTitle">שם המוצר</h2>
-            <div class="rating">★★★★★ <span style="color:#7f8c8d; font-size:0.8rem;">(128 ביקורות)</span></div>
-            <p id="modalPrice" style="font-size:1.5rem; font-weight:bold;">₪0</p>
-            <p id="modalDesc"></p>
-            
-            <span class="selector-label">בחר מידה:</span>
-            <button class="size-btn">S</button><button class="size-btn selected">M</button><button class="size-btn">L</button>
-
-            <span class="selector-label">בחר צבע:</span>
-            <span class="color-dot selected" style="background:#1a2a3a" title="כחול"></span>
-            <span class="color-dot" style="background:#2c3e50" title="אפור"></span>
-
-            <button class="btn-add" onclick="addToCart()">הוספה לסל הקנייה</button>
+    <div class="product-card" onclick="showProduct('סוודר אלפיני', 420, 'https://images.unsplash.com/photo-1576188973526-0e5d7047b0cf?q=80&w=600', 'סוודר קשמיר רך ונעים בגזרה מודרנית.')">
+        <img src="https://images.unsplash.com/photo-1576188973526-0e5d7047b0cf?q=80&w=400" alt="סוודר">
+        <div class="product-info">
+            <h3>סוודר אלפיני</h3>
+            <p>₪420</p>
         </div>
     </div>
 </div>
 
-<section class="contact" id="contact">
-    <h2>צור קשר</h2>
-    <form onsubmit="event.preventDefault(); alert('ההודעה נשלחה!');">
-        <input type="text" placeholder="שם מלא" required>
-        <input type="email" placeholder="אימייל" required>
-        <textarea placeholder="איך נוכל לעזור?" rows="4"></textarea>
-        <button type="submit" class="btn-add">שלח הודעה</button>
-    </form>
-</section>
+<div class="modal" id="pModal">
+    <div class="modal-box">
+        <span class="modal-close" onclick="closeP()">&times;</span>
+        <div class="modal-left">
+            <img id="mImg" src="" alt="מוצר">
+        </div>
+        <div class="modal-right">
+            <div class="stars">★★★★★</div>
+            <h2 id="mTitle">שם המוצר</h2>
+            <p id="mPrice" style="font-size: 1.5rem; font-weight: bold; color: var(--accent);"></p>
+            <p id="mDesc">תיאור המוצר...</p>
+            <button class="btn-main" onclick="buy()">הוספה לסל</button>
+        </div>
+    </div>
+</div>
 
 <script>
-    let cartCount = 0;
-    function openProduct(name, price, img, desc) {
-        document.getElementById('modalTitle').innerText = name;
-        document.getElementById('modalPrice').innerText = '₪' + price;
-        document.getElementById('modalImg').src = img;
-        document.getElementById('modalDesc').innerText = desc;
-        document.getElementById('productModal').classList.add('active');
+    let counter = 0;
+
+    function showProduct(title, price, img, desc) {
+        document.getElementById('mTitle').innerText = title;
+        document.getElementById('mPrice').innerText = '₪' + price;
+        document.getElementById('mImg').src = img;
+        document.getElementById('mDesc').innerText = desc;
+        document.getElementById('pModal').classList.add('active');
     }
-    function closeProduct() { document.getElementById('productModal').classList.remove('active'); }
-    function addToCart() {
-        cartCount++;
-        document.getElementById('cart-count').innerText = cartCount;
-        alert("המוצר התווסף לסל!");
-        closeProduct();
+
+    function closeP() {
+        document.getElementById('pModal').classList.remove('active');
+    }
+
+    function buy() {
+        counter++;
+        document.getElementById('count').innerText = counter;
+        alert("המוצר נוסף בהצלחה!");
+        closeP();
+    }
+
+    // סגירת מודאל בלחיצה מחוץ לקופסה
+    window.onclick = function(e) {
+        if(e.target.id === 'pModal') closeP();
     }
 </script>
+
 </body>
 </html>
